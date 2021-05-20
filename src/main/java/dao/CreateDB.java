@@ -24,7 +24,7 @@ public class CreateDB {
         return Math.round(1000 * rand2 * rand1 * 100.00) / 100.00;
     }
 
-    public void createOrDropTable(String query) {
+    public void createTable(String query) {
         try (Connection connection = JDBCUtils.getConnection();
              Statement statement = connection.createStatement()) {
             statement.execute(query);
@@ -33,27 +33,33 @@ public class CreateDB {
         }
     }
 
-    public static String dropQuery(String tableName) {
-        return DBQueries.DROP_TABLE.concat(tableName);
+    public void dropTable(String tableName) {
+        try (Connection connection = JDBCUtils.getConnection();
+             Statement statement = connection.createStatement()) {
+            statement.execute(tableName);
+        } catch (SQLException e) {
+            JDBCUtils.printSQLException(e);
+        }
     }
 
     public void initClients() {
-        createDB.createOrDropTable(dropQuery("clients"));
-        createDB.createOrDropTable(DBQueries.CREATE_TABLE_CLIENTS);
+        createDB.dropTable(DBQueries.DROP_TABLE.concat("clients"));
+        createDB.createTable(DBQueries.CREATE_TABLE_CLIENTS);
         createDB.insertClients();
     }
 
     public void initAccounts() {
-        createDB.createOrDropTable(dropQuery("accounts"));
-        createDB.createOrDropTable(DBQueries.CREATE_TABLE_ACCOUNTS);
+        createDB.dropTable(DBQueries.DROP_TABLE.concat("accounts"));
+        createDB.createTable(DBQueries.CREATE_TABLE_ACCOUNTS);
         createDB.insertAccounts();
     }
 
     public void initCards() {
-        createDB.createOrDropTable(dropQuery("cards"));
-        createDB.createOrDropTable(DBQueries.CREATE_TABLE_CARDS);
+        createDB.dropTable(DBQueries.DROP_TABLE.concat("cards"));
+        createDB.createTable(DBQueries.CREATE_TABLE_CARDS);
         createDB.insertCards();
     }
+
 
     private void insertCards() {
         try (Connection connection = JDBCUtils.getConnection();
