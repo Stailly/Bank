@@ -1,10 +1,10 @@
-package dao;
+package db;
 
 import java.math.BigInteger;
 import java.sql.*;
 import java.util.Random;
 
-import static dao.DBQueries.*;
+import static db.DBQueries.*;
 
 
 public class DBMethods {

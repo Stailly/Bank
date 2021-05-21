@@ -1,11 +1,11 @@
-package dao;
+package db;
 
 import java.math.BigInteger;
 import java.sql.*;
 import java.util.Random;
 
-import static dao.DBMethods.generateAccountNumber;
-import static dao.DBMethods.generateCardNumber;
+import static db.DBMethods.generateAccountNumber;
+import static db.DBMethods.generateCardNumber;
 
 public class CreateDB {
     private static CreateDB createDB;

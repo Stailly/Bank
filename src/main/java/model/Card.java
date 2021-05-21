@@ -1,14 +1,40 @@
 package model;
 
-import java.math.BigInteger;
-
 public class Card {
-    private BigInteger account;
-    private int client;
-    private long cardNumber;
+    private int account;
+    private long number;
+    private int owner;
 
-    public Card(BigInteger account, int client) {
+    public Card(int account) {
         this.account = account;
-        this.client = client;
+    }
+
+    public Card(int account, int owner) {
+        this.account = account;
+        this.owner = owner;
+    }
+
+    public void setNumber(long number) {
+        this.number = number;
+    }
+
+    public int getOwner() {
+        return owner;
+    }
+
+    public void setOwner(int owner) {
+        this.owner = owner;
+    }
+
+    public int getAccount() {
+        return account;
+    }
+
+    public void setAccount(int account) {
+        this.account = account;
+    }
+
+    public long getNumber() {
+        return number;
     }
 }
