@@ -1,4 +1,4 @@
-package dao;
+package controller;
 import db.DBQueries;
 import db.JDBCUtils;
 import model.Client;
@@ -7,7 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClientDao implements Dao<Client> {
+public class ClientCont implements Controller<Client> {
 
     @Override
     public Client get(int id) {

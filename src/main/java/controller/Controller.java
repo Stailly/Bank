@@ -1,8 +1,8 @@
-package dao;
+package controller;
 
 import java.util.List;
 
-public interface Dao<T> {
+public interface Controller<T> {
 
     T get(int id);
 

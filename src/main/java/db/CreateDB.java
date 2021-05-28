@@ -1,15 +1,20 @@
 package db;
 
-import java.math.BigInteger;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Random;
 
 import static db.DBMethods.generateAccountNumber;
+import static db.DBMethods.generateBalance;
 import static db.DBMethods.generateCardNumber;
 
+/**
+ * Класс для создания и заполнения баз данных
+ */
 public class CreateDB {
     private static CreateDB createDB;
-
 
     public static void main(String[] args) {
         createDB = new CreateDB();
@@ -18,11 +23,6 @@ public class CreateDB {
         createDB.initCards();
     }
 
-    private Double generateBalance() {
-        double rand1 = new Random().nextDouble();
-        int rand2 = new Random().nextInt(100);
-        return Math.round(1000 * rand2 * rand1 * 100.00) / 100.00;
-    }
 
     public void createTable(String query) {
         try (Connection connection = JDBCUtils.getConnection();
@@ -63,12 +63,12 @@ public class CreateDB {
 
     private void insertCards() {
         try (Connection connection = JDBCUtils.getConnection();
-             Statement statement = connection.createStatement()) {
+             PreparedStatement statement = connection.prepareStatement(DBQueries.INSERT_CARD)) {
             for (int i = 0; i < 100; i++) {
-                long card = generateCardNumber();
-                int account = new Random().nextInt(100);
-                int client = new Random().nextInt(100);
-                statement.execute(String.format("INSERT INTO cards (card, account, client) VALUES (%s,%s,%s)", card, account, client));
+                statement.setLong(1, generateCardNumber());
+                statement.setInt(2, new Random().nextInt(100) + 1);
+                statement.setInt(3, new Random().nextInt(100) + 1);
+                statement.execute();
             }
         } catch (SQLException e) {
             JDBCUtils.printSQLException(e);
@@ -77,12 +77,12 @@ public class CreateDB {
 
     public void insertAccounts() {
         try (Connection connection = JDBCUtils.getConnection();
-             Statement statement = connection.createStatement()) {
+             PreparedStatement statement = connection.prepareStatement(DBQueries.INSERT_ACC)) {
             for (int i = 0; i < 100; i++) {
-                double balance = generateBalance();
-                int client = new Random().nextInt(100) + 1;
-                BigInteger account = generateAccountNumber();
-                statement.execute(String.format("INSERT INTO accounts (account, client, balance) VALUES (%s, %s, %s)", account, client, balance));
+                statement.setString(1, generateAccountNumber().toString());
+                statement.setInt(2, new Random().nextInt(100) + 1);
+                statement.setDouble(3, generateBalance());
+                statement.execute();
             }
         } catch (SQLException e) {
             JDBCUtils.printSQLException(e);

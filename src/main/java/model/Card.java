@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Objects;
+
 public class Card {
     private int account;
     private long number;
@@ -11,6 +13,12 @@ public class Card {
 
     public Card(int account, int owner) {
         this.account = account;
+        this.owner = owner;
+    }
+
+    public Card(long number, int account, int owner) {
+        this.account = account;
+        this.number = number;
         this.owner = owner;
     }
 
@@ -36,5 +44,18 @@ public class Card {
 
     public long getNumber() {
         return number;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Card card = (Card) o;
+        return account == card.account && number == card.number && owner == card.owner;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(account, number, owner);
     }
 }

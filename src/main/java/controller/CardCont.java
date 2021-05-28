@@ -1,4 +1,4 @@
-package dao;
+package controller;
 
 import db.DBQueries;
 import db.JDBCUtils;
@@ -12,8 +12,8 @@ import java.util.List;
 
 import static db.DBMethods.generateCardNumber;
 
-public class CardDao implements Dao<Card> {
-    private final AccountDao accountDao = new AccountDao();
+public class CardCont implements Controller<Card> {
+    private final AccountCont accountDao = new AccountCont();
 
     @Override
     public Card get(int clientID) {
@@ -27,6 +27,25 @@ public class CardDao implements Dao<Card> {
                 card.setOwner(clientID);
                 return card;
             }
+        } catch (SQLException e) {
+            JDBCUtils.printSQLException(e);
+        }
+        return null;
+    }
+//+
+    public List<Card> getCards(int clientID) {
+        List<Card> list = new ArrayList<>();
+        try (Connection connection = JDBCUtils.getConnection();
+             PreparedStatement statement = connection.prepareStatement(DBQueries.SELECT_CARD)) {
+            statement.setInt(1, clientID);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                Card card = new Card(rs.getInt("account"));
+                card.setNumber(rs.getLong("card"));
+                card.setOwner(clientID);
+                list.add(card);
+            }
+            return list;
         } catch (SQLException e) {
             JDBCUtils.printSQLException(e);
         }
@@ -61,7 +80,6 @@ public class CardDao implements Dao<Card> {
             statement.setLong(1, card.getNumber());
             statement.setInt(2, card.getAccount());
             statement.setInt(3, card.getOwner());
-
             statement.execute();
         } catch (SQLException e) {
             JDBCUtils.printSQLException(e);
@@ -136,7 +154,7 @@ public class CardDao implements Dao<Card> {
             throw new FormatException("Номер счёта должен содержать 20 цифр");
         }
         try (Connection connection = JDBCUtils.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(DBQueries.GET_ACCOUNT_FROM_ID)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(DBQueries.GET_ID_BY_ACCOUNT)) {
             preparedStatement.setString(1, account.toString());
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
@@ -162,7 +180,7 @@ public class CardDao implements Dao<Card> {
             throw new FormatException("Номер счёта должен содержать 20 цифр");
         }
         try (Connection connection = JDBCUtils.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(DBQueries.GET_ACCOUNT_FROM_ID)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(DBQueries.GET_ID_BY_ACCOUNT)) {
             preparedStatement.setString(1, account.toString());
             ResultSet rs = preparedStatement.executeQuery();
             rs.next();

@@ -1,4 +1,4 @@
-package dao;
+package controller;
 
 import db.DBQueries;
 import db.JDBCUtils;
@@ -9,7 +9,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AccountDao implements Dao<Account> {
+public class AccountCont implements Controller<Account> {
 
     @Override
     public Account get(int id) {
